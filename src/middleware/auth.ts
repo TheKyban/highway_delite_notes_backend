@@ -56,8 +56,12 @@ export const authenticate = async (
     req.user = user;
     next();
   } catch (error: any) {
-    // Clear the expired cookie
-    res.clearCookie("authToken");
+    // Clear the expired cookie with proper options for cross-origin
+    res.clearCookie("authToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
     
     let message = "Invalid or expired token";
     if (error.message && error.message.includes("expired")) {

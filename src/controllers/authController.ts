@@ -59,7 +59,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       .cookie("otpToken", otpToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 5 * 60 * 1000, // 5 minutes
       })
       .status(201)
@@ -161,7 +161,7 @@ export const verifyOTP = async (req: Request, res: Response): Promise<void> => {
       .cookie("authToken", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       })
       .header("Authorization", `Bearer ${token}`)
@@ -234,7 +234,7 @@ export const resendOTP = async (req: Request, res: Response): Promise<void> => {
       .cookie("otpToken", otpToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 5 * 60 * 1000, // 5 minutes
       })
       .status(200)
@@ -291,7 +291,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       .cookie("otpToken", otpToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 5 * 60 * 1000, // 5 minutes
       })
       .status(200)
@@ -310,10 +310,18 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 export const logout = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Clear auth token cookie
+    // Clear auth token cookie with proper options for cross-origin
     res
-      .clearCookie("authToken")
-      .clearCookie("otpToken") // Clear any remaining OTP tokens
+      .clearCookie("authToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      })
+      .clearCookie("otpToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      })
       .status(200)
       .json({
         success: true,
