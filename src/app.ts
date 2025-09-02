@@ -13,6 +13,9 @@ dotenv.config();
 
 const app = express();
 
+// Trust proxy for deployment platforms like Render, Heroku, etc.
+app.set("trust proxy", 1);
+
 // Security middleware
 app.use(helmet());
 
