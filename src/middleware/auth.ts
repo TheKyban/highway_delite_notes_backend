@@ -25,7 +25,8 @@ export const authenticate = async (
       token = req.cookies.authToken;
     }
 
-    console.log(token);
+    console.log("Cookie ", req.cookies);
+    console.log("Token ", token);
 
     if (!token) {
       res.status(401).json({
