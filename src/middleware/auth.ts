@@ -32,6 +32,7 @@ export const authenticate = async (
       res.status(401).json({
         success: false,
         message: "Access token is required",
+        cookies: req.cookies,
       });
       return;
     }
@@ -44,6 +45,7 @@ export const authenticate = async (
       res.status(401).json({
         success: false,
         message: "User not found",
+        cookies: req.cookies,
       });
       return;
     }
@@ -52,6 +54,7 @@ export const authenticate = async (
       res.status(401).json({
         success: false,
         message: "Email not verified",
+        cookies: req.cookies,
       });
       return;
     }
@@ -74,6 +77,7 @@ export const authenticate = async (
     res.status(401).json({
       success: false,
       message,
+      cookies: req.cookies,
     });
   }
 };

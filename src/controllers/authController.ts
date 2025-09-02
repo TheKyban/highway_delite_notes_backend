@@ -353,6 +353,7 @@ export const getProfile = async (
           isVerified: user.isVerified,
           createdAt: user.createdAt,
         },
+        cookies: req.cookies,
       },
     });
   } catch (error) {
