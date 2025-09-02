@@ -25,6 +25,8 @@ export const authenticate = async (
       token = req.cookies.authToken;
     }
 
+    console.log(token);
+
     if (!token) {
       res.status(401).json({
         success: false,
@@ -62,12 +64,12 @@ export const authenticate = async (
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
-    
+
     let message = "Invalid or expired token";
     if (error.message && error.message.includes("expired")) {
       message = "Token has expired. Please login again.";
     }
-    
+
     res.status(401).json({
       success: false,
       message,
