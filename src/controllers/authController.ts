@@ -61,6 +61,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 5 * 60 * 1000, // 5 minutes
+        path: "/",
       })
       .status(201)
       .json({
@@ -157,12 +158,19 @@ export const verifyOTP = async (req: Request, res: Response): Promise<void> => {
 
     // Clear OTP cookie and set auth token in header
     res
-      .clearCookie("otpToken")
+      .clearCookie("otpToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        path: "/",
+      })
       .cookie("authToken", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        path: "/",
+        domain: process.env.NODE_ENV === "production" ? undefined : undefined,
       })
       .header("Authorization", `Bearer ${token}`)
       .status(200)
@@ -236,6 +244,7 @@ export const resendOTP = async (req: Request, res: Response): Promise<void> => {
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 5 * 60 * 1000, // 5 minutes
+        path: "/",
       })
       .status(200)
       .json({
@@ -293,6 +302,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 5 * 60 * 1000, // 5 minutes
+        path: "/",
       })
       .status(200)
       .json({
@@ -316,11 +326,13 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        path: "/",
       })
       .clearCookie("otpToken", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        path: "/",
       })
       .status(200)
       .json({
@@ -353,7 +365,6 @@ export const getProfile = async (
           isVerified: user.isVerified,
           createdAt: user.createdAt,
         },
-        cookies: req.cookies,
       },
     });
   } catch (error) {
