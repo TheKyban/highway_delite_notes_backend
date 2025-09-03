@@ -25,7 +25,7 @@ export const authenticate = async (
       token = req.cookies.authToken;
     }
 
-    console.log(req.cookies);
+    console.log("Cookies:", `${req.cookies}`);
 
     if (!token) {
       res.status(401).json({
@@ -60,6 +60,7 @@ export const authenticate = async (
 
     req.user = user;
     next();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // Clear the expired cookie with proper options for cross-origin
     res.clearCookie("authToken", {
